@@ -57,9 +57,13 @@ arm-none-eabi-gdb {#example#}.elf
 on gdb console type:
 
 ```
-(gdb) target extended-remote :4242
+(gdb) target extended-remote :3333
 (gdb) load
 ```
 
 
 [Great instruction video about using gdb debugger](https://www.youtube.com/watch?v=2kLK_sdvC3Q)
+
+# Resources
+
+https://github.com/fcayci/stm32f1-bare-metal/

@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Openocd",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "svdFile": "./stm32f103xx.svd",
+            "showDevDebugOutput": true,
+            "configFiles": [
+                "openocd.cfg"
+            ],
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/04_timer_interrupt.elf",
+            "autorun": [
+                "symbol-file /04_timer_interrupt.elf",
+                "monitor reset"
+            ]
+        }
+    ]
+
+}

@@ -1,0 +1,69 @@
+In this example we use one of STM32's timer to generate an interrupt event.
+
+While our main program running and doing their own work, the timer counting up in the background and after reaching a certain number it generates an interrupt event.
+Our code "catch" this interrupt event and blink a led for a small amount of time then return back the handling to the main program.
+
+In order to handle an interrupt:
+
+- Set the address of the interrupt handling code on the vector table
+In the previous examples we only used a minimal vector table to set the memory address of stack pointer and reset handler so our code can run.
+This vector table also contains the memory addresses of our interrupt handling codes.
+
+In the RM0008 Reference manual the 10.1.2 Interrupt and exception section tell us what addresses we need to fill out in the vector table in order to the processor jumps to our handling code. The first 12 addresses are ARM fixed addresses after that starts the vendor specific addresses with position 0.
+
+In this example we going to use the TIM2 timer. The TIM2 timer's interrupt handler start at position 28.
+We fill the preceding - ARM and vendor specific - addresses with 0-s, and then set this address to point our interrupt handling code:
+
+  `.word TIM2_IRQHandler // position 28`
+
+- Enable interrupts in NVIC (Nested Vector Interrupt Controller)
+
+The NVIC is an another beast to learn, detailed in an another documentation, the [STM32 Cortext M3 programming manual](https://www.st.com/resource/en/programming_manual/cd00228163-stm32f10xxx-20xxx-21xxx-l1xxxx-cortex-m3-programming-manual-stmicroelectronics.pdf).
+
+Right now all we need to know is that we need to set NVIC_ISER0 registers' 28th bit to 1 in order to enable TIM2 interrupts.
+
+  // ENABLE TIM2 INTERRUPT IN NVIC_ISER0
+  LDR r0, =NVIC_BASE // NVIC_ISER0
+  ORR r1, r1, (1<<28) // TIM2 position in Vector table [see RM0008 10.1.2 Interrupt and exception vectors]
+  STR r1, [r0]
+
+- Write our interrupt handling code:
+
+One very important note is that because we run our code in ARM Thumb mode you must label this function with [https://mcuoneclipse.com/2012/11/14/thumbs-up-with-assembly-on-arm-cortex/](.thumb_func)
+
+.thumb_func
+TIM2_IRQHandler:
+
+- Return from interrupt handling
+
+
+- In order to generate interrupt with timers
+
+Enable clock for TIM2 in RCC_APB1ENR register by setting Bit 0.
+Enable TIM2 interrupt in TIM2_DIER register by setting Bit 0 (UIE: Update interrupt enable).
+
+// TIM2_PSC
+TIM2_ARR
+
+- Calculate and configure the time between two interrupts
+
+We can control the time between two interrupts by setting the timers frequency - time between one count up - and the count number.
+
+The frequency can be set on the TIM2_PSC register with this equation:
+
+....
+
+
+The 8Mhz is the default configured speeds of the STM32F10xxx chips.
+
+The counting limit can be set by setting an integer number in the TIM2_ARR register.
+
+Enable these setting by TIM2_EGR register.
+
+Resources:
+
+[Lecture 9: Interrupts](https://www.youtube.com/watch?v=uFBNf7F3l60)
+[Lecture 10: Interrupt Enable and Interrupt Priority](https://www.youtube.com/watch?v=K0vmH2YGbOY)
+https://stackoverflow.com/questions/63990906/stm32-nvic-enableirq-bare-metal-equivalent
+https://mcuoneclipse.com/2012/11/14/thumbs-up-with-assembly-on-arm-cortex/
+https://github.com/blippy/rpi/tree/master/stm32/bare/04-timer-interrupt
