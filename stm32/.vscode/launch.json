@@ -11,9 +11,9 @@
                 "openocd.cfg"
             ],
             "cwd": "${workspaceRoot}",
-            "executable": "${workspaceRoot}/04_timer_interrupt.elf",
+            "executable": "${workspaceRoot}/06_adc.elf",
             "autorun": [
-                "symbol-file /04_timer_interrupt.elf",
+                "symbol-file /06_adc.elf",
                 "monitor reset"
             ]
         }

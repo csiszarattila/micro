@@ -1,4 +1,4 @@
-.PHONY: 01_minimal_loop 02_led_blinking 02_led_blinking_c 03_led_switching 03_led_switching_c 04_timer_interrupt 05_button_interrupt
+.PHONY: 01_minimal_loop 02_led_blinking 02_led_blinking_c 03_led_switching 03_led_switching_c 04_timer_interrupt 05_button_interrupt 06_adc
 
 01_minimal_loop:
 		arm-none-eabi-as 01_minimal_loop/loop.S -g -o 01_minimal_loop.o
@@ -27,6 +27,9 @@
 
 05_button_interrupt_c:
 		arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -Wall -nostdlib -g3 -O0 -T./stm32f103.ld 05_button_interrupt/interrupt.c -o 05_button_interrupt.elf
+
+06_adc:
+		arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -Wall -nostdlib -g3 -O0 -T./stm32f103.ld 06_adc/adc.c -o 06_adc.elf
 
 .PHONY: clean
 clean:
