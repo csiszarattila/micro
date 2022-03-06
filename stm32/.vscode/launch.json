@@ -11,9 +11,9 @@
                 "openocd.cfg"
             ],
             "cwd": "${workspaceRoot}",
-            "executable": "${workspaceRoot}/06_adc.elf",
+            "executable": "${workspaceRoot}/07_uart.elf",
             "autorun": [
-                "symbol-file /06_adc.elf",
+                "symbol-file ./07_uart.elf",
                 "monitor reset"
             ]
         }
